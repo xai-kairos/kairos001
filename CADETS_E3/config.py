@@ -5,24 +5,25 @@
 ########################################################
 
 # The directory of the raw logs
-raw_dir = "/the/absolute/path/of/cadets_e3/"
+RAW_DIR = "../data/cadets/"
 
 # The directory to save all artifacts
-artifact_dir = "./artifact/"
+ARTIFACT_DIR = "./artifact/"
 
 # The directory to save the vectorized graphs
-graphs_dir = artifact_dir + "graphs/"
+GRAPHS_DIR = ARTIFACT_DIR + "graph_embeddings/"
 
 # The directory to save the models
-models_dir = artifact_dir + "models/"
+MODELS_DIR = ARTIFACT_DIR + "models/"
 
 # The directory to save the results after testing
-test_re = artifact_dir + "test_re/"
+TEST_RE = ARTIFACT_DIR + "test_re/"
 
 # The directory to save all visualized results
-vis_re = artifact_dir + "vis_re/"
+VIS_RE = ARTIFACT_DIR + "vis_re/"
 
-
+# The directory with malicious ground truth
+MALICIOUS_DIR = ARTIFACT_DIR + "malicious/"
 
 ########################################################
 #
@@ -31,22 +32,22 @@ vis_re = artifact_dir + "vis_re/"
 ########################################################
 
 # Database name
-database = 'tc_cadet_dataset_db'
+DATABASE = 'tc_cadet_dataset_db_001'
 
 # Only config this setting when you have the problem mentioned
 # in the Troubleshooting section in settings/environment-settings.md.
 # Otherwise, set it as None
-host = '/var/run/postgresql/'
-# host = None
+# host = '/var/run/postgresql/'
+HOST = None
 
 # Database user
-user = 'postgres'
+USER = 'postgres'
 
 # The password to the database user
-password = 'postgres'
+PASSWORD = 'password'
 
 # The port number for Postgres
-port = '5432'
+PORT = '5432'
 
 
 ########################################################
@@ -132,7 +133,7 @@ epoch_num=50
 
 # The size of time window, 60000000000 represent 1 min in nanoseconds.
 # The default setting is 15 minutes.
-time_window_size = 60000000000 * 15
+time_window_size = 60000000000 * 2
 
 
 ########################################################

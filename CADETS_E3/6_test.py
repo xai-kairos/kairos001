@@ -8,11 +8,12 @@ import logging
 from kairos_utils import *
 from config import *
 from model import *
+from torch_geometric.loader import TemporalDataLoader
 
 # Setting for logging
 logger = logging.getLogger("reconstruction_logger")
 logger.setLevel(logging.INFO)
-file_handler = logging.FileHandler(artifact_dir + 'reconstruction.log')
+file_handler = logging.FileHandler(ARTIFACT_DIR + 'reconstruction.log')
 file_handler.setLevel(logging.INFO)
 formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
 file_handler.setFormatter(formatter)
@@ -55,8 +56,9 @@ def test(inference_data,
     # Record the running time to evaluate the performance
     start = time.perf_counter()
 
-    for batch in inference_data.seq_batches(batch_size=BATCH):
+    loader = TemporalDataLoader(inference_data, batch_size=BATCH, shuffle=False)
 
+    for batch in loader: 
         src, pos_dst, t, msg = batch.src, batch.dst, batch.t, batch.msg
         unique_nodes = torch.cat([unique_nodes, src, pos_dst]).unique()
         total_edges += BATCH
@@ -145,15 +147,16 @@ def test(inference_data,
 
 def load_data():
     # graph_4_3 - graph_4_5 will be used to initialize node IDF scores.
-    graph_4_3 = torch.load(graphs_dir + "/graph_4_3.TemporalData.simple").to(device=device)
-    graph_4_4 = torch.load(graphs_dir + "/graph_4_4.TemporalData.simple").to(device=device)
-    graph_4_5 = torch.load(graphs_dir + "/graph_4_5.TemporalData.simple").to(device=device)
+    # graph_4_3 = torch.load(GRAPHS_DIR + "/graph_4_3.TemporalData.simple").to(device=device)
+    # graph_4_4 = torch.load(GRAPHS_DIR + "/graph_4_4.TemporalData.simple").to(device=device)
+    # graph_4_5 = torch.load(GRAPHS_DIR + "/graph_4_5.TemporalData.simple").to(device=device)
 
     # Testing set
-    graph_4_6 = torch.load(graphs_dir + "/graph_4_6.TemporalData.simple").to(device=device)
-    graph_4_7 = torch.load(graphs_dir + "/graph_4_7.TemporalData.simple").to(device=device)
+    graph_4_6 = torch.load(GRAPHS_DIR + "/graph_4_6.TemporalData.simple").to(device=device)
+    # graph_4_7 = torch.load(GRAPHS_DIR + "/graph_4_7.TemporalData.simple").to(device=device)
 
-    return [graph_4_3, graph_4_4, graph_4_5, graph_4_6, graph_4_7]
+    # return [graph_4_3, graph_4_4, graph_4_5, graph_4_6, graph_4_7]
+    return graph_4_6
 
 
 if __name__ == "__main__":
@@ -164,35 +167,36 @@ if __name__ == "__main__":
     nodeid2msg = gen_nodeid2msg(cur=cur)
 
     # Load data
-    graph_4_3, graph_4_4, graph_4_5, graph_4_6, graph_4_7 = load_data()
+    # graph_4_3, graph_4_4, graph_4_5, graph_4_6, graph_4_7 = load_data()
+    graph_4_6 = load_data()
 
     # load trained model
-    memory, gnn, link_pred, neighbor_loader = torch.load(f"{models_dir}/models.pt",map_location=device)
+    memory, gnn, link_pred, neighbor_loader = torch.load(f"{MODELS_DIR}/models.pt",map_location=device)
 
     # Reconstruct the edges in each day
-    test(inference_data=graph_4_3,
-         memory=memory,
-         gnn=gnn,
-         link_pred=link_pred,
-         neighbor_loader=neighbor_loader,
-         nodeid2msg=nodeid2msg,
-         path=artifact_dir + "graph_4_3")
+    # test(inference_data=graph_4_3,
+    #      memory=memory,
+    #      gnn=gnn,
+    #      link_pred=link_pred,
+    #      neighbor_loader=neighbor_loader,
+    #      nodeid2msg=nodeid2msg,
+    #      path=ARTIFACT_DIR + "graph_4_3")
 
-    test(inference_data=graph_4_4,
-         memory=memory,
-         gnn=gnn,
-         link_pred=link_pred,
-         neighbor_loader=neighbor_loader,
-         nodeid2msg=nodeid2msg,
-         path=artifact_dir + "graph_4_4")
+    # test(inference_data=graph_4_4,
+    #      memory=memory,
+    #      gnn=gnn,
+    #      link_pred=link_pred,
+    #      neighbor_loader=neighbor_loader,
+    #      nodeid2msg=nodeid2msg,
+    #      path=ARTIFACT_DIR + "graph_4_4")
 
-    test(inference_data=graph_4_5,
-         memory=memory,
-         gnn=gnn,
-         link_pred=link_pred,
-         neighbor_loader=neighbor_loader,
-         nodeid2msg=nodeid2msg,
-         path=artifact_dir + "graph_4_5")
+    # test(inference_data=graph_4_5,
+    #      memory=memory,
+    #      gnn=gnn,
+    #      link_pred=link_pred,
+    #      neighbor_loader=neighbor_loader,
+    #      nodeid2msg=nodeid2msg,
+    #      path=ARTIFACT_DIR + "graph_4_5")
 
     test(inference_data=graph_4_6,
          memory=memory,
@@ -200,12 +204,12 @@ if __name__ == "__main__":
          link_pred=link_pred,
          neighbor_loader=neighbor_loader,
          nodeid2msg=nodeid2msg,
-         path=artifact_dir + "graph_4_6")
+         path=ARTIFACT_DIR + "graph_4_6")
 
-    test(inference_data=graph_4_7,
-         memory=memory,
-         gnn=gnn,
-         link_pred=link_pred,
-         neighbor_loader=neighbor_loader,
-         nodeid2msg=nodeid2msg,
-         path=artifact_dir + "graph_4_7")
+    # test(inference_data=graph_4_7,
+    #      memory=memory,
+    #      gnn=gnn,
+    #      link_pred=link_pred,
+    #      neighbor_loader=neighbor_loader,
+    #      nodeid2msg=nodeid2msg,
+    #      path=ARTIFACT_DIR + "graph_4_7")

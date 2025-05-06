@@ -35,12 +35,11 @@ def replace_path_name(path_name):
 
 
 # Users should manually put the detected anomalous time windows here
-attack_list = [
-    artifact_dir+'/graph_4_6/2018-04-06 11:18:26.126177915~2018-04-06 11:33:35.116170745.txt',
-    artifact_dir+'/graph_4_6/2018-04-06 11:33:35.116170745~2018-04-06 11:48:42.606135188.txt',
-    artifact_dir+'/graph_4_6/2018-04-06 11:48:42.606135188~2018-04-06 12:03:50.186115455.txt',
-    artifact_dir+'/graph_4_6/2018-04-06 12:03:50.186115455~2018-04-06 14:01:32.489584227.txt',
-]
+attack_list = []
+
+files = os.listdir(f"{ARTIFACT_DIR}/graph_4_6_m")
+for f in files:
+    attack_list.append(f"{ARTIFACT_DIR}/graph_4_6_m/{f}")
 
 
 original_edges_count = 0
@@ -118,7 +117,7 @@ def attack_edge_flag(msg):
 
 
 # Plot and render candidate subgraph
-os.system(f"mkdir -p {artifact_dir}/graph_visual/")
+os.system(f"mkdir -p {ARTIFACT_DIR}/graph_visual/")
 graph_index = 0
 for c in communities:
     dot = Digraph(name="MyPicture", comment="the test", format="pdf")
@@ -173,7 +172,7 @@ for c in communities:
                      str(hashgen(replace_path_name(temp_edge['dstmsg']))), label=temp_edge['edge_type'],
                      color=edge_color)
 
-    dot.render(f'{artifact_dir}/graph_visual/subgraph_' + str(graph_index), view=False)
+    dot.render(f'{ARTIFACT_DIR}/graph_visual/subgraph_' + str(graph_index), view=False)
     graph_index += 1
 
 

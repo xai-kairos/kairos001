@@ -98,18 +98,18 @@ def datetime_to_timestamp_US(date):
     return int(timeStamp)
 
 def init_database_connection():
-    if host is not None:
-        connect = psycopg2.connect(database = database,
-                                   host = host,
-                                   user = user,
-                                   password = password,
-                                   port = port
+    if HOST is not None:
+        connect = psycopg2.connect(database = DATABASE,
+                                   host = HOST,
+                                   user = USER,
+                                   password = PASSWORD,
+                                   port = PORT
                                   )
     else:
-        connect = psycopg2.connect(database = database,
-                                   user = user,
-                                   password = password,
-                                   port = port
+        connect = psycopg2.connect(database = DATABASE,
+                                   user = USER,
+                                   password = PASSWORD,
+                                   port = PORT
                                   )
     cur = connect.cursor()
     return cur, connect

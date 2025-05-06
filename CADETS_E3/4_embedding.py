@@ -13,7 +13,7 @@ from kairos_utils import *
 # Setting for logging
 logger = logging.getLogger("embedding_logger")
 logger.setLevel(logging.INFO)
-file_handler = logging.FileHandler(artifact_dir + 'embedding.log')
+file_handler = logging.FileHandler(ARTIFACT_DIR + 'embedding.log')
 file_handler.setLevel(logging.INFO)
 formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
 file_handler.setFormatter(formatter)
@@ -70,10 +70,10 @@ def gen_feature(cur):
     FH_string = FeatureHasher(n_features=node_embedding_dim, input_type="string")
     node2higvec=[]
     for i in tqdm(node_msg_dic_list):
-        vec=FH_string.transform([i]).toarray()
+        vec=FH_string.transform([[i]]).toarray()
         node2higvec.append(vec)
     node2higvec = np.array(node2higvec).reshape([-1, node_embedding_dim])
-    torch.save(node2higvec, artifact_dir + "node2higvec")
+    torch.save(node2higvec, ARTIFACT_DIR + "node2higvec")
     return node2higvec
 
 def gen_relation_onehot():
@@ -83,7 +83,7 @@ def gen_relation_onehot():
         if type(i) is not int:
             rel2vec[i]= relvec[rel2id[i]-1]
             rel2vec[relvec[rel2id[i]-1]]=i
-    torch.save(rel2vec, artifact_dir + "rel2vec")
+    torch.save(rel2vec, ARTIFACT_DIR + "rel2vec")
     return rel2vec
 
 def gen_vectorized_graphs(cur, node2higvec, rel2vec, logger):
@@ -120,17 +120,24 @@ def gen_vectorized_graphs(cur, node2higvec, rel2vec, logger):
         dataset.src = torch.tensor(src)
         dataset.dst = torch.tensor(dst)
         dataset.t = torch.tensor(t)
-        dataset.msg = torch.vstack(msg)
+        # Check if msg is not empty before vstack
+        if msg:
+            dataset.msg = torch.vstack(msg)
+            dataset.msg = dataset.msg.to(torch.float)
+        else:
+            logger.warning(
+                f'No valid messages for day 2018-04-{day}. Skipping vstack.')
+            
         dataset.src = dataset.src.to(torch.long)
         dataset.dst = dataset.dst.to(torch.long)
-        dataset.msg = dataset.msg.to(torch.float)
+        # dataset.msg = dataset.msg.to(torch.float)
         dataset.t = dataset.t.to(torch.long)
-        torch.save(dataset, graphs_dir + "/graph_4_" + str(day) + ".TemporalData.simple")
+        torch.save(dataset, GRAPHS_DIR + "/graph_4_" + str(day) + ".TemporalData.simple")
 
 if __name__ == "__main__":
     logger.info("Start logging.")
 
-    os.system(f"mkdir -p {graphs_dir}")
+    os.system(f"mkdir -p {GRAPHS_DIR}")
 
     cur, _ = init_database_connection()
     node2higvec = gen_feature(cur=cur)

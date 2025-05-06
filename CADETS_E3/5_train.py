@@ -12,7 +12,7 @@ from model import *
 # Setting for logging
 logger = logging.getLogger("training_logger")
 logger.setLevel(logging.INFO)
-file_handler = logging.FileHandler(artifact_dir + 'training.log')
+file_handler = logging.FileHandler(ARTIFACT_DIR + 'training.log')
 file_handler.setLevel(logging.INFO)
 formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
 file_handler.setFormatter(formatter)
@@ -70,9 +70,9 @@ def train(train_data,
     return total_loss / train_data.num_events
 
 def load_train_data():
-    graph_4_2 = torch.load(graphs_dir + "/graph_4_2.TemporalData.simple").to(device=device)
-    graph_4_3 = torch.load(graphs_dir + "/graph_4_3.TemporalData.simple").to(device=device)
-    graph_4_4 = torch.load(graphs_dir + "/graph_4_4.TemporalData.simple").to(device=device)
+    graph_4_2 = torch.load(GRAPHS_DIR + "/graph_4_2.TemporalData.simple").to(device=device)
+    graph_4_3 = torch.load(GRAPHS_DIR + "/graph_4_3.TemporalData.simple").to(device=device)
+    graph_4_4 = torch.load(GRAPHS_DIR + "/graph_4_4.TemporalData.simple").to(device=device)
     return [graph_4_2, graph_4_3, graph_4_4]
 
 def init_models(node_feat_size):
@@ -129,5 +129,5 @@ if __name__ == "__main__":
     # Save the trained model
     model = [memory, gnn, link_pred, neighbor_loader]
 
-    os.system(f"mkdir -p {models_dir}")
-    torch.save(model, f"{models_dir}/models.pt")
+    os.system(f"mkdir -p {MODELS_DIR}")
+    torch.save(model, f"{MODELS_DIR}/models.pt")
