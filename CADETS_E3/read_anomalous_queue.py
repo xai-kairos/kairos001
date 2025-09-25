@@ -45,6 +45,7 @@ df.to_csv(tsv_path, sep="\t", index=False)
 print(f"Wrote combined TSV to {tsv_path}")
 
 # 8) Print a preview in the terminal
-pd.set_option("display.max_rows", None, "display.max_columns", None)
+pd.set_option("display.max_rows", None)
+pd.set_option("display.max_columns", None)
 print("\n=== Preview of loaded history lists ===\n")
 print(df.head(20).to_string(index=False))

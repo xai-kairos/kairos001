@@ -16,7 +16,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torch_geometric.nn.models.tgn import (LastNeighborLoader, IdentityMessage, MeanAggregator,
                                            LastAggregator)
-from torch_geometric import *
+# from torch_geometric import * 
 from tqdm import tqdm
 import networkx as nx
 import numpy as np
@@ -45,7 +45,8 @@ def ns_time_to_datetime_US(ns):
     :return: datetime   format: 2013-10-10 23:40:00.000000000
     """
     tz = pytz.timezone('US/Eastern')
-    dt = pytz.datetime.datetime.fromtimestamp(int(ns) // 1000000000, tz)
+    dt = datetime.fromtimestamp(int(ns) // 1000000000)
+    dt = tz.localize(dt)
     s = dt.strftime('%Y-%m-%d %H:%M:%S')
     s += '.' + str(int(int(ns) % 1000000000)).zfill(9)
     return s
@@ -56,7 +57,8 @@ def time_to_datetime_US(s):
     :return: datetime   format: 2013-10-10 23:40:00
     """
     tz = pytz.timezone('US/Eastern')
-    dt = pytz.datetime.datetime.fromtimestamp(int(s), tz)
+    dt = datetime.fromtimestamp(int(s))
+    dt = tz.localize(dt)
     s = dt.strftime('%Y-%m-%d %H:%M:%S')
 
     return s

@@ -80,6 +80,8 @@ def create_tables():
     """
     Create the tables in the database.
     """
+    conn = None
+    cur = None
     try:
         # Connect to the newly created database
         conn = psycopg2.connect(

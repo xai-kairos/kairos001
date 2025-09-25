@@ -18,7 +18,7 @@ logger.addHandler(file_handler)
 def cal_anomaly_loss(loss_list, edge_list):
     if len(loss_list) != len(edge_list):
         print("error!")
-        return 0
+        return 0, 0, set(), set()
     count = 0
     loss_sum = 0
     loss_std = std(loss_list)
@@ -66,6 +66,8 @@ def compute_IDF():
     file_l = os.listdir(file_path)
     for i in file_l:
         file_list.append(file_path + i)
+
+
 
     node_set = {}
     for f_path in tqdm(file_list):

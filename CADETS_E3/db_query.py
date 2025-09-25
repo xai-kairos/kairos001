@@ -4,7 +4,10 @@ from db_utils import PostgresDB, list_tables, run_sql
 with PostgresDB() as db:
     print("Tables:", db.list_tables())
     rows = db.execute("SELECT COUNT(*) AS n FROM event_table")
-    print(rows[0]["n"])
+    if rows and len(rows) > 0 and rows[0] is not None:
+        print(rows[0]["n"])
+    else:
+        print("No rows returned from query.")
 
 # Functional, one-off query
 print("All tables:", list_tables())

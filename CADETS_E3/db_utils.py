@@ -101,9 +101,9 @@ class PostgresDB:
         """
         self.cur.execute(sql, params)
         if fetch:
-            return self.cur.fetchall()
+            return [dict(row) for row in self.cur.fetchall()]
         else:
-            return self.cur.rowcount 
+            return None
 
 
 ###############################################################################
@@ -149,7 +149,7 @@ def run_sql(
     with _session() as cur:
         cur.execute(sql, params)
         if fetch:
-            return cur.fetchall()
+            return [dict(row) for row in cur.fetchall()]
         else:
-            return cur.rowcount
+            return None
     

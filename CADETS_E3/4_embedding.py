@@ -1,5 +1,5 @@
 from sklearn.feature_extraction import FeatureHasher
-from torch_geometric.data import *
+from torch_geometric.data import TemporalData
 from tqdm import tqdm
 
 import numpy as np
@@ -53,6 +53,7 @@ def gen_feature(cur):
     node_msg_dic_list = []
     for i in tqdm(nodeid2msg.keys()):
         if type(i) == int:
+            higlist = []
             if 'netflow' in nodeid2msg[i].keys():
                 higlist = ['netflow']
                 higlist += ip2higlist(nodeid2msg[i]['netflow'])
@@ -64,7 +65,8 @@ def gen_feature(cur):
             if 'subject' in nodeid2msg[i].keys():
                 higlist = ['subject']
                 higlist += path2higlist(nodeid2msg[i]['subject'])
-            node_msg_dic_list.append(list2str(higlist))
+            if higlist:
+                node_msg_dic_list.append(list2str(higlist))
 
     # Featurize the hierarchical node labels
     FH_string = FeatureHasher(n_features=node_embedding_dim, input_type="string")

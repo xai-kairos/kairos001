@@ -14,3 +14,12 @@ pip install torch-scatter torch-sparse torch-cluster torch-spline-conv torch-geo
   -f https://data.pyg.org/whl/torch-2.2.0+cpu.html
 
 pip install pytz
+
+
+python gnn_explainer.py \
+  --graph_path ./artifact/graph_embeddings/graph_4_6.TemporalData.simple \
+  --models_path ./artifact/models/models.pt \
+  --target_index 0 \
+  --epochs 200 \
+  --topk 25
+
