@@ -15,9 +15,10 @@ pip install torch-scatter torch-sparse torch-cluster torch-spline-conv torch-geo
 
 pip install pytz
 
+ python 4_embedding.py --start "2018-04-06 11:33:00" --end "2018-04-06 11:34:00" --label 4_6_test --skip-daily
 
-python gnn_explainer.py \
-  --graph_path ./artifact/graph_embeddings/graph_4_6.TemporalData.simple \
+python explainer_gnn.py \
+  --graph_path ./artifact/graph_embeddings/graph_4_6_test.TemporalData.simple \
   --models_path ./artifact/models/models.pt \
   --target_index 0 \
   --epochs 200 \
